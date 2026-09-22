@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/', include('enrollment.urls')),
     path('api/courses/<int:course_id>/assignments/', include('assignments.urls')),
     path('api/assignments/<int:pk>/', AssignmentDetailView.as_view(), name='assignment-detail'),
+    path('api/', include('submissions.urls')),
 ]
