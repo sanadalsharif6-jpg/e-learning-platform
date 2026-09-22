@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from enrollment.views import EnrollView
+from assignments.views import AssignmentDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,4 +10,6 @@ urlpatterns = [
     path('api/courses/<int:course_id>/lessons/', include('lessons.urls')),
     path('api/courses/<int:course_id>/enroll/', EnrollView.as_view(), name='enroll'),
     path('api/', include('enrollment.urls')),
+    path('api/courses/<int:course_id>/assignments/', include('assignments.urls')),
+    path('api/assignments/<int:pk>/', AssignmentDetailView.as_view(), name='assignment-detail'),
 ]
