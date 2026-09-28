@@ -1,17 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCourses } from '../services/courses'
+import api from '../services/api'
 
 export default function Courses() {
   const [courses, setCourses] = useState([])
+  const [me, setMe] = useState(null)
 
   useEffect(() => {
     getCourses().then((res) => setCourses(res.data))
+    api.get('/auth/me/').then((res) => setMe(res.data))
   }, [])
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Courses</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Courses</h1>
+        {me?.role === 'TEACHER' && (
+          <Link to="/courses/new" className="bg-blue-600 text-white px-4 py-2 rounded">
+            + New Course
+          </Link>
+        )}
+      </div>
       <div className="grid gap-4">
         {courses.map((c) => (
           <Link

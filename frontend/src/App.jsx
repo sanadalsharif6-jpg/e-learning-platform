@@ -6,6 +6,10 @@ import Courses from './pages/Courses'
 import CourseDetail from './pages/CourseDetail'
 import AssignmentDetail from './pages/AssignmentDetail'
 import SubmissionDetail from './pages/SubmissionDetail'
+import NewCourse from './pages/NewCourse'
+import NewLesson from './pages/NewLesson'
+import NewAssignment from './pages/NewAssignment'
+import LessonDetail from './pages/LessonDetail'
 
 function App() {
   return (
@@ -15,10 +19,14 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/new" element={<NewCourse />} />
         <Route path="/courses/:id" element={<CourseDetail />} />
+        <Route path="/courses/:id/lessons/new" element={<NewLesson />} />
+        <Route path="/courses/:id/assignments/new" element={<NewAssignment />} />
         <Route path="/assignments/:id" element={<AssignmentDetail />} />
         <Route path="/submissions/:id" element={<SubmissionDetail />} />
         <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonDetail />} />
       </Routes>
     </BrowserRouter>
   )

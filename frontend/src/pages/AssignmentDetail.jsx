@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getAssignment, submitAssignment, getAssignmentSubmissions } from '../services/submissions'
+import { updateAssignment } from '../services/courses'
 import api from '../services/api'
 
 export default function AssignmentDetail() {
@@ -9,14 +10,32 @@ export default function AssignmentDetail() {
   const [me, setMe] = useState(null)
   const [content, setContent] = useState('')
   const [fileUrl, setFileUrl] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('') 
   const [submissions, setSubmissions] = useState([])
   const [existingSubmission, setExistingSubmission] = useState(null)
+  const [editing, setEditing] = useState(false)
+  const [editForm, setEditForm] = useState(null)
 
   useEffect(() => {
     api.get('/auth/me/').then((res) => setMe(res.data))
-    getAssignment(id).then((res) => setAssignment(res.data))
+    getAssignment(id).then((res) => {
+      setAssignment(res.data)
+      setEditForm(res.data)
+    })
   }, [id])
+
+  const handleEditChange = (e) => setEditForm({ ...editForm, [e.target.name]: e.target.value })
+
+  const handleEditSave = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await updateAssignment(id, editForm)
+      setAssignment(res.data)
+      setEditing(false)
+    } catch (err) {
+      setMessage('Failed to update.')
+    }
+  }
 
   useEffect(() => {
     if (me && me.role === 'TEACHER') {
@@ -50,8 +69,44 @@ export default function AssignmentDetail() {
     <div className="p-8 max-w-2xl mx-auto">
       <Link to={`/courses/${assignment.course}`} className="text-blue-600 text-sm">&larr; Back to course</Link>
       <h1 className="text-2xl font-bold mt-2">{assignment.title}</h1>
-      <p className="text-gray-600 mb-2">{assignment.instructions}</p>
-      <p className="text-sm text-gray-500 mb-6">Due: {new Date(assignment.due_date).toLocaleString()}</p>
+            {me.role === 'TEACHER' && !editing && (
+        <button onClick={() => setEditing(true)} className="bg-gray-600 text-white px-3 py-1 rounded text-sm mb-4">
+          Edit
+        </button>
+      )}
+
+      {editing ? (
+        <form onSubmit={handleEditSave} className="mb-6">
+          <input
+            name="title"
+            value={editForm.title}
+            onChange={handleEditChange}
+            className="w-full border rounded p-2 mb-2"
+          />
+          <textarea
+            name="instructions"
+            value={editForm.instructions}
+            onChange={handleEditChange}
+            className="w-full border rounded p-2 mb-2 h-24"
+          />
+          <input
+            name="due_date"
+            type="datetime-local"
+            value={editForm.due_date?.slice(0, 16)}
+            onChange={handleEditChange}
+            className="w-full border rounded p-2 mb-2"
+          />
+          <div className="flex gap-2">
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+            <button type="button" onClick={() => setEditing(false)} className="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+          </div>
+        </form>
+      ) : (
+        <>
+          <p className="text-gray-600 mb-2">{assignment.instructions}</p>
+          <p className="text-sm text-gray-500 mb-6">Due: {new Date(assignment.due_date).toLocaleString()}</p>
+        </>
+      )}
 
       {me.role === 'STUDENT' && (
         <form onSubmit={handleSubmit}>

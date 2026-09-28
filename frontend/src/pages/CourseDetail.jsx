@@ -62,11 +62,11 @@ export default function CourseDetail() {
 
       <h2 className="text-xl font-semibold mt-6 mb-2">Lessons</h2>
       <div className="space-y-2">
-        {lessons.map((l) => (
-          <div key={l.id} className="border rounded p-3">
+            {lessons.map((l) => (
+          <Link key={l.id} to={`/courses/${id}/lessons/${l.id}`} className="block border rounded p-3 hover:shadow-md">
             <h3 className="font-medium">{l.title}</h3>
-            <p className="text-sm text-gray-600">{l.content}</p>
-          </div>
+            <p className="text-sm text-gray-600 truncate">{l.content}</p>
+          </Link>
         ))}
         {lessons.length === 0 && <p className="text-gray-500 text-sm">No lessons available.</p>}
       </div>
