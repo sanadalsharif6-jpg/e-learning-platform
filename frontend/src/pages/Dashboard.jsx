@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import api from '../services/api'
 
 export default function Dashboard() {
@@ -24,8 +24,11 @@ export default function Dashboard() {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Welcome, {user.username}</h1>
       <p>Role: {user.role}</p>
-      <p>Email: {user.email}</p>
-      <button onClick={handleLogout} className="mt-4 bg-red-600 text-white px-4 py-2 rounded">
+      <p className="mb-4">Email: {user.email}</p>
+      <Link to="/courses" className="inline-block bg-blue-600 text-white px-4 py-2 rounded mr-2">
+        View Courses
+      </Link>
+      <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded">
         Logout
       </button>
     </div>

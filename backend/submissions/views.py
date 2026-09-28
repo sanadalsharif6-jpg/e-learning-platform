@@ -14,6 +14,14 @@ class SubmitAssignmentView(generics.CreateAPIView):
     def get_assignment(self):
         return get_object_or_404(Assignment, pk=self.kwargs['assignment_id'])
 
+    def get(self, request, *args, **kwargs):
+        assignment = self.get_assignment()
+        existing = Submission.objects.filter(assignment=assignment, student=request.user).first()
+        if not existing:
+            return Response({'detail': 'No submission yet.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(existing)
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         assignment = self.get_assignment()
         existing = Submission.objects.filter(assignment=assignment, student=request.user).first()
