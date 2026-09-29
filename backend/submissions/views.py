@@ -31,9 +31,11 @@ class SubmitAssignmentView(generics.CreateAPIView):
             serializer = self.get_serializer(existing, data=request.data, partial=True)
         else:
             serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
-        serializer.save(assignment=assignment, student=request.user)
+        if existing:
+            serializer.save(assignment=assignment, student=request.user, grade=None, feedback='')
+        else:
+            serializer.save(assignment=assignment, student=request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

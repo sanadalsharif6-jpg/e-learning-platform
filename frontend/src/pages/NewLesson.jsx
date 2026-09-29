@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { createLesson } from '../services/courses'
 
 export default function NewLesson() {
@@ -31,45 +31,50 @@ export default function NewLesson() {
   }
 
   return (
-    <div className="p-8 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Add Lesson</h1>
-      <form onSubmit={handleSubmit}>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <input
-          placeholder="Lesson title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded p-2 mb-4"
-        />
-        <textarea
-          placeholder="Lesson content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full border rounded p-2 mb-4 h-32"
-        />
-        <input
-          placeholder="External link (optional)"
-          value={externalUrl}
-          onChange={(e) => setExternalUrl(e.target.value)}
-          className="w-full border rounded p-2 mb-4"
-        />
-        <label className="block text-sm text-gray-600 mb-1">Attach a file (PDF, Word, etc. - optional)</label>
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-          className="w-full border rounded p-2 mb-4"
-        />
-        <input
-          type="number"
-          placeholder="Order"
-          value={order}
-          onChange={(e) => setOrder(e.target.value)}
-          className="w-full border rounded p-2 mb-4"
-        />
-        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-          Add Lesson
-        </button>
-      </form>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-lg mx-auto px-6 py-8">
+        <Link to={`/courses/${id}`} className="text-indigo-600 text-sm font-medium hover:underline">&larr; Back to course</Link>
+        <div className="bg-white border border-slate-200 rounded-xl p-6 mt-4">
+          <h1 className="text-xl font-bold text-slate-900 mb-5">Add Lesson</h1>
+          <form onSubmit={handleSubmit}>
+            {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">{error}</p>}
+            <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Content</label>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 mb-4 h-32 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <label className="block text-sm font-medium text-slate-700 mb-1">External link (optional)</label>
+            <input
+              value={externalUrl}
+              onChange={(e) => setExternalUrl(e.target.value)}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Attach a file (optional)</label>
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 mb-4"
+            />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Order</label>
+            <input
+              type="number"
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+              Add Lesson
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }
