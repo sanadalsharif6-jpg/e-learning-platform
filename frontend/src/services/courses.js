@@ -24,3 +24,5 @@ export const getCoursesByTeacher = (teacherId) => api.get('/courses/').then(res 
   ...res,
   data: res.data.filter(c => c.teacher === teacherId)
 }))
+export const deleteCourse = (id) => api.delete(`/courses/${id}/`)
+export const deleteLesson = (courseId, lessonId) => api.delete(`/courses/${courseId}/lessons/${lessonId}/`)

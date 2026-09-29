@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { getLesson, updateLesson } from '../services/courses'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { getLesson, updateLesson, deleteLesson } from '../services/courses'
 import api from '../services/api'
 
 export default function LessonDetail() {
   const { courseId, lessonId } = useParams()
+  const navigate = useNavigate()
   const [form, setForm] = useState(null)
   const [me, setMe] = useState(null)
   const [editing, setEditing] = useState(false)
@@ -17,7 +18,15 @@ export default function LessonDetail() {
   }, [courseId, lessonId])
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
-
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this lesson? This cannot be undone.')) return
+    try {
+      await deleteLesson(courseId, lessonId)
+      navigate(`/courses/${courseId}`)
+    } catch (err) {
+      setMessage('Failed to delete lesson.')
+    }
+  }
   const handleSave = async (e) => {
     e.preventDefault()
     const formData = new FormData()
@@ -50,10 +59,15 @@ export default function LessonDetail() {
           <div className="bg-white border border-slate-200 rounded-xl p-6 mt-4">
             <div className="flex justify-between items-start mb-4">
               <h1 className="text-2xl font-bold text-slate-900">{form.title}</h1>
-              {isOwner && (
-                <button onClick={() => setEditing(true)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm px-3 py-1.5 rounded-lg transition">
-                  Edit
-                </button>
+               {isOwner && (
+                <div className="flex gap-2">
+                  <button onClick={() => setEditing(true)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm px-3 py-1.5 rounded-lg transition">
+                    Edit
+                  </button>
+                  <button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1.5 rounded-lg transition">
+                    Delete
+                  </button>
+                </div>
               )}
             </div>
             <p className="whitespace-pre-wrap break-words text-slate-700">{form.content}</p>

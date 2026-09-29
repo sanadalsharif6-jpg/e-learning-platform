@@ -7,3 +7,4 @@ export const submitAssignment = (assignmentId, data) => api.post(`/assignments/$
 export const getAssignmentSubmissions = (assignmentId) => api.get(`/assignments/${assignmentId}/submissions/`)
 export const getSubmission = (id) => api.get(`/submissions/${id}/`)
 export const gradeSubmission = (id, data) => api.patch(`/submissions/${id}/grade/`, data)
+export const deleteAssignment = (id) => api.delete(`/assignments/${id}/`)

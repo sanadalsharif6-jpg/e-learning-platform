@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { getAssignment, submitAssignment, getAssignmentSubmissions } from '../services/submissions'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { getAssignment, submitAssignment, getAssignmentSubmissions, deleteAssignment } from '../services/submissions'
 import { updateAssignment } from '../services/courses'
 import api from '../services/api'
 
 export default function AssignmentDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [assignment, setAssignment] = useState(null)
   const [me, setMe] = useState(null)
   const [content, setContent] = useState('')
@@ -52,6 +53,15 @@ export default function AssignmentDetail() {
       setMessage('Failed to update.')
     }
   }
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this assignment? This cannot be undone.')) return
+    try {
+      await deleteAssignment(id)
+      navigate(`/courses/${assignment.course}`)
+    } catch (err) {
+      setMessage('Failed to delete assignment.')
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -77,10 +87,15 @@ export default function AssignmentDetail() {
         <Link to={`/courses/${assignment.course}`} className="text-indigo-600 text-sm font-medium hover:underline">&larr; Back to course</Link>
 
         <div className="bg-white border border-slate-200 rounded-xl p-6 mt-4 mb-6">
-          {me.role === 'TEACHER' && !editing && (
-            <button onClick={() => setEditing(true)} className="float-right bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm px-3 py-1.5 rounded-lg transition">
-              Edit
-            </button>
+           {me.role === 'TEACHER' && !editing && (
+            <div className="float-right flex gap-2">
+              <button onClick={() => setEditing(true)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm px-3 py-1.5 rounded-lg transition">
+                Edit
+              </button>
+              <button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-1.5 rounded-lg transition">
+                Delete
+              </button>
+            </div>
           )}
           <h1 className="text-2xl font-bold text-slate-900 mb-2">{assignment.title}</h1>
 

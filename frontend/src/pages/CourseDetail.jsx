@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getCourse, getLessons, getAssignments, enrollInCourse } from '../services/courses'
+import { getCourse, getLessons, getAssignments, enrollInCourse, deleteCourse } from '../services/courses'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 
 export default function CourseDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [course, setCourse] = useState(null)
   const [lessons, setLessons] = useState([])
   const [assignments, setAssignments] = useState([])
@@ -31,6 +33,15 @@ export default function CourseDetail() {
 
   if (!course) return <div className="p-8 text-slate-500">Loading...</div>
 
+  const handleDeleteCourse = async () => {
+    if (!window.confirm('Delete this course? This cannot be undone.')) return
+    try {
+      await deleteCourse(id)
+      navigate('/courses')
+    } catch (err) {
+      setMessage('Failed to delete course.')
+    }
+  }
   const isTeacherOwner = me && me.role === 'TEACHER' && course.teacher === me.id
   const isStudent = me && me.role === 'STUDENT'
 
@@ -50,7 +61,7 @@ export default function CourseDetail() {
           </button>
         )}
 
-        {isTeacherOwner && (
+                {isTeacherOwner && (
           <div className="flex gap-2 mb-8">
             <Link to={`/courses/${id}/lessons/new`} className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
               + Add Lesson
@@ -58,9 +69,11 @@ export default function CourseDetail() {
             <Link to={`/courses/${id}/assignments/new`} className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
               + Add Assignment
             </Link>
+            <button onClick={handleDeleteCourse} className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition ml-auto">
+              Delete Course
+            </button>
           </div>
         )}
-
         <h2 className="text-lg font-semibold text-slate-800 mb-3">Lessons</h2>
         <div className="grid gap-2 mb-8">
           {lessons.map((l) => (
