@@ -9,6 +9,7 @@ class Submission(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submissions')
     content = models.TextField(blank=True)
     file_url = models.URLField(blank=True)
+    file = models.FileField(upload_to='submission_files/', blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now=True)
     grade = models.PositiveIntegerField(null=True, blank=True)
     feedback = models.TextField(blank=True)

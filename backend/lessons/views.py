@@ -1,10 +1,11 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, parsers
 from .models import Lesson
 from .serializers import LessonSerializer
 from .permissions import IsEnrolledOrTeacherOwner
 
 
 class LessonListCreateView(generics.ListCreateAPIView):
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
     serializer_class = LessonSerializer
     permission_classes = [permissions.IsAuthenticated, IsEnrolledOrTeacherOwner]
 
@@ -16,6 +17,7 @@ class LessonListCreateView(generics.ListCreateAPIView):
 
 
 class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
     serializer_class = LessonSerializer
     permission_classes = [permissions.IsAuthenticated, IsEnrolledOrTeacherOwner]
     queryset = Lesson.objects.all()

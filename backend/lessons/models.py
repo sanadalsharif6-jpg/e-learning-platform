@@ -7,6 +7,7 @@ class Lesson(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
     external_url = models.URLField(blank=True)
+    file = models.FileField(upload_to='lesson_files/', blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

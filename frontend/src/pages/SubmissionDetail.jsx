@@ -37,10 +37,14 @@ export default function SubmissionDetail() {
       <p className="text-sm text-gray-500 mb-4">
         {submission.is_late ? 'Late' : 'On time'} - Submitted {new Date(submission.submitted_at).toLocaleString()}
       </p>
-      <div className="border rounded p-4 mb-6">
+            <div className="border rounded p-4 mb-6">
         <p>{submission.content}</p>
+        {submission.file && (
+          <a href={submission.file} target="_blank" rel="noreferrer" className="text-blue-600 block mt-2">
+            Download attached file
+          </a>
+        )}
       </div>
-
       {submission.grade !== null && (
         <div className="bg-green-50 border border-green-200 rounded p-4 mb-6">
           <p className="font-semibold">Grade: {submission.grade} / 100</p>

@@ -9,6 +9,7 @@ export default function LessonDetail() {
   const [me, setMe] = useState(null)
   const [editing, setEditing] = useState(false)
   const [message, setMessage] = useState('')
+  const [newFile, setNewFile] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -17,11 +18,18 @@ export default function LessonDetail() {
   }, [courseId, lessonId])
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
-
   const handleSave = async (e) => {
     e.preventDefault()
+    const formData = new FormData()
+    formData.append('title', form.title)
+    formData.append('content', form.content)
+    formData.append('external_url', form.external_url || '')
+    formData.append('order', form.order)
+    if (newFile) formData.append('file', newFile)
+
     try {
-      await updateLesson(courseId, lessonId, form)
+      const res = await updateLesson(courseId, lessonId, formData)
+      setForm(res.data)
       setMessage('Saved!')
       setEditing(false)
     } catch (err) {
@@ -48,9 +56,14 @@ export default function LessonDetail() {
             )}
           </div>
           <p className="whitespace-pre-wrap">{form.content}</p>
-          {form.external_url && (
-            <a href={form.external_url} target="_blank" rel="noreferrer" className="text-blue-600 block mt-4">
+         {form.external_url && (
+            <a href={form.external_url} target="_blank" rel="noreferrer" className="text-blue-600 block mt-2">
               {form.external_url}
+            </a>
+          )}
+          {form.file && (
+            <a href={form.file} target="_blank" rel="noreferrer" className="text-blue-600 block mt-2">
+              Download attached file
             </a>
           )}
         </>
@@ -69,10 +82,18 @@ export default function LessonDetail() {
             onChange={handleChange}
             className="w-full border rounded p-2 mb-4 h-32"
           />
-          <input
+                   <input
             name="external_url"
             value={form.external_url || ''}
             onChange={handleChange}
+            className="w-full border rounded p-2 mb-2"
+          />
+          <label className="block text-sm text-gray-600 mb-1">
+            Replace attached file (leave empty to keep current)
+          </label>
+          <input
+            type="file"
+            onChange={(e) => setNewFile(e.target.files[0])}
             className="w-full border rounded p-2 mb-4"
           />
           <div className="flex gap-2">

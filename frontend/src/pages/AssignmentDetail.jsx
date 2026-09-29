@@ -10,6 +10,7 @@ export default function AssignmentDetail() {
   const [me, setMe] = useState(null)
   const [content, setContent] = useState('')
   const [fileUrl, setFileUrl] = useState('')
+  const [file, setFile] = useState(null)
   const [message, setMessage] = useState('') 
   const [submissions, setSubmissions] = useState([])
   const [existingSubmission, setExistingSubmission] = useState(null)
@@ -52,10 +53,15 @@ export default function AssignmentDetail() {
     }
   }, [me, id])
 
-  const handleSubmit = async (e) => {
+     const handleSubmit = async (e) => {
     e.preventDefault()
+    const formData = new FormData()
+    formData.append('content', content)
+    formData.append('file_url', fileUrl)
+    if (file) formData.append('file', file)
+
     try {
-      const res = await submitAssignment(id, { content, file_url: fileUrl })
+      const res = await submitAssignment(id, formData)
       setExistingSubmission(res.data)
       setMessage(existingSubmission ? 'Resubmitted successfully!' : 'Submitted successfully!')
     } catch (err) {
@@ -128,11 +134,17 @@ export default function AssignmentDetail() {
             placeholder="Write your answer..."
             className="w-full border rounded p-2 mb-2 h-32"
           />
-          <input
+         <input
             type="url"
             value={fileUrl}
             onChange={(e) => setFileUrl(e.target.value)}
             placeholder="File link (optional) - e.g. Google Drive/Dropbox link"
+            className="w-full border rounded p-2 mb-2"
+          />
+          <label className="block text-sm text-gray-600 mb-1">Or attach a file directly (code, PDF, etc.)</label>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
             className="w-full border rounded p-2 mb-4"
           />
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">

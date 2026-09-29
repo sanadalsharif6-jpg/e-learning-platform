@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, parsers
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from assignments.models import Assignment
@@ -8,6 +8,7 @@ from .permissions import IsStudentEnrolled, IsCourseTeacher
 
 
 class SubmitAssignmentView(generics.CreateAPIView):
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
     serializer_class = SubmissionSerializer
     permission_classes = [permissions.IsAuthenticated, IsStudentEnrolled]
 

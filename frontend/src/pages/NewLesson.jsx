@@ -4,17 +4,26 @@ import { createLesson } from '../services/courses'
 
 export default function NewLesson() {
   const { id } = useParams()
-  const [form, setForm] = useState({ title: '', content: '', external_url: '', order: 1 })
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [externalUrl, setExternalUrl] = useState('')
+  const [file, setFile] = useState(null)
+  const [order, setOrder] = useState(1)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('content', content)
+    formData.append('external_url', externalUrl)
+    formData.append('order', order)
+    if (file) formData.append('file', file)
+
     try {
-      await createLesson(id, form)
+      await createLesson(id, formData)
       navigate(`/courses/${id}`)
     } catch (err) {
       setError('Failed to create lesson.')
@@ -27,32 +36,34 @@ export default function NewLesson() {
       <form onSubmit={handleSubmit}>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <input
-          name="title"
           placeholder="Lesson title"
-          value={form.title}
-          onChange={handleChange}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full border rounded p-2 mb-4"
         />
         <textarea
-          name="content"
           placeholder="Lesson content"
-          value={form.content}
-          onChange={handleChange}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           className="w-full border rounded p-2 mb-4 h-32"
         />
         <input
-          name="external_url"
           placeholder="External link (optional)"
-          value={form.external_url}
-          onChange={handleChange}
+          value={externalUrl}
+          onChange={(e) => setExternalUrl(e.target.value)}
+          className="w-full border rounded p-2 mb-4"
+        />
+        <label className="block text-sm text-gray-600 mb-1">Attach a file (PDF, Word, etc. - optional)</label>
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
           className="w-full border rounded p-2 mb-4"
         />
         <input
-          name="order"
           type="number"
           placeholder="Order"
-          value={form.order}
-          onChange={handleChange}
+          value={order}
+          onChange={(e) => setOrder(e.target.value)}
           className="w-full border rounded p-2 mb-4"
         />
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
