@@ -18,3 +18,9 @@ export const updateLesson = (courseId, lessonId, data) => api.put(`/courses/${co
 export const updateAssignment = (id, data) => api.put(`/assignments/${id}/`, data)
 export const getMyCourses = () => api.get('/courses/mine/')
 export const getPendingGrading = () => api.get('/submissions/pending-grading/')
+export const getTeachers = () => api.get('/auth/teachers/')
+export const getTeacher = (id) => api.get(`/auth/teachers/${id}/`)
+export const getCoursesByTeacher = (teacherId) => api.get('/courses/').then(res => ({
+  ...res,
+  data: res.data.filter(c => c.teacher === teacherId)
+}))

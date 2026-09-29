@@ -11,6 +11,8 @@ import NewCourse from './pages/NewCourse'
 import NewLesson from './pages/NewLesson'
 import NewAssignment from './pages/NewAssignment'
 import LessonDetail from './pages/LessonDetail'
+import Teachers from './pages/Teachers'
+import TeacherDetail from './pages/TeacherDetail'
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/courses/:id/lessons/new" element={<NewLesson />} />
         <Route path="/courses/:id/assignments/new" element={<NewAssignment />} />
         <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonDetail />} />
+        <Route path="/teachers" element={<Teachers />} />
+        <Route path="/teachers/:id" element={<TeacherDetail />} />
         <Route path="/assignments/:id" element={<AssignmentDetail />} />
         <Route path="/submissions/:id" element={<SubmissionDetail />} />
         <Route path="/" element={<Navigate to="/login" />} />

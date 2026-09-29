@@ -44,3 +44,31 @@ class MeView(APIView):
             'bio': user.bio,
             'subject_or_expertise': user.subject_or_expertise,
         })
+    
+
+class TeacherListView(generics.ListAPIView):
+    queryset = User.objects.filter(role='TEACHER')
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        from rest_framework import serializers as drf_serializers
+
+        class TeacherSerializer(drf_serializers.ModelSerializer):
+            class Meta:
+                model = User
+                fields = ['id', 'username', 'bio', 'subject_or_expertise']
+        return TeacherSerializer
+
+
+class TeacherDetailView(generics.RetrieveAPIView):
+    queryset = User.objects.filter(role='TEACHER')
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_serializer_class(self):
+        from rest_framework import serializers as drf_serializers
+
+        class TeacherSerializer(drf_serializers.ModelSerializer):
+            class Meta:
+                model = User
+                fields = ['id', 'username', 'bio', 'subject_or_expertise']
+        return TeacherSerializer

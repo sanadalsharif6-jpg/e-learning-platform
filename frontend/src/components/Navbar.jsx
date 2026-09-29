@@ -31,6 +31,7 @@ export default function Navbar() {
         <Link to="/dashboard" className="font-bold text-lg text-indigo-600">EduPlatform</Link>
         <Link to="/dashboard" className="text-sm text-slate-600 hover:text-indigo-600 font-medium">Dashboard</Link>
         <Link to="/courses" className="text-sm text-slate-600 hover:text-indigo-600 font-medium">Courses</Link>
+        <Link to="/teachers" className="text-sm text-slate-600 hover:text-indigo-600 font-medium">Teachers</Link>
       </div>
       <div className="flex items-center gap-4">
         <span className="text-sm text-slate-500">{me.username} <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full ml-1">{me.role}</span></span>
