@@ -13,28 +13,30 @@ export default function Courses() {
   }, [])
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Courses</h1>
-        {me?.role === 'TEACHER' && (
-          <Link to="/courses/new" className="bg-blue-600 text-white px-4 py-2 rounded">
-            + New Course
-          </Link>
-        )}
-      </div>
-      <div className="grid gap-4">
-        {courses.map((c) => (
-          <Link
-            key={c.id}
-            to={`/courses/${c.id}`}
-            className="block border rounded-lg p-4 hover:shadow-md transition"
-          >
-            <h2 className="text-lg font-semibold">{c.title}</h2>
-            <p className="text-gray-600 text-sm">{c.category}</p>
-            <p className="text-gray-500 text-xs mt-1">by {c.teacher_username}</p>
-          </Link>
-        ))}
-        {courses.length === 0 && <p className="text-gray-500">No courses yet.</p>}
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Courses</h1>
+          {me?.role === 'TEACHER' && (
+            <Link to="/courses/new" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+              + New Course
+            </Link>
+          )}
+        </div>
+        <div className="grid gap-3">
+          {courses.map((c) => (
+            <Link
+              key={c.id}
+              to={`/courses/${c.id}`}
+              className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition"
+            >
+              <h2 className="font-semibold text-slate-900">{c.title}</h2>
+              <p className="text-slate-500 text-sm">{c.category}</p>
+              <p className="text-slate-400 text-xs mt-1">by {c.teacher_username}</p>
+            </Link>
+          ))}
+          {courses.length === 0 && <p className="text-slate-400">No courses yet.</p>}
+        </div>
       </div>
     </div>
   )

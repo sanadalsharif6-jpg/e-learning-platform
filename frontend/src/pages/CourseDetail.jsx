@@ -29,57 +29,59 @@ export default function CourseDetail() {
     }
   }
 
-  if (!course) return <div className="p-8">Loading...</div>
+  if (!course) return <div className="p-8 text-slate-500">Loading...</div>
 
   const isTeacherOwner = me && me.role === 'TEACHER' && course.teacher === me.id
   const isStudent = me && me.role === 'STUDENT'
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <Link to="/courses" className="text-blue-600 text-sm">&larr; Back to courses</Link>
-      <h1 className="text-2xl font-bold mt-2">{course.title}</h1>
-      <p className="text-gray-600 mb-4">{course.description}</p>
-      <p className="text-sm text-gray-500 mb-4">Taught by {course.teacher_username}</p>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        <Link to="/courses" className="text-indigo-600 text-sm font-medium hover:underline">&larr; Back to courses</Link>
+        <h1 className="text-2xl font-bold text-slate-900 mt-2">{course.title}</h1>
+        <p className="text-slate-600 mb-1">{course.description}</p>
+        <p className="text-sm text-slate-400 mb-5">Taught by {course.teacher_username}</p>
 
-      {message && <p className="text-green-600 mb-4">{message}</p>}
+        {message && <p className="text-emerald-600 text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4">{message}</p>}
 
-      {isStudent && (
-        <button onClick={handleEnroll} className="bg-blue-600 text-white px-4 py-2 rounded mb-6">
-          Enroll
-        </button>
-      )}
+        {isStudent && (
+          <button onClick={handleEnroll} className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg mb-8 transition">
+            Enroll in this course
+          </button>
+        )}
 
-      {isTeacherOwner && (
-        <div className="flex gap-2 mb-6">
-          <Link to={`/courses/${id}/lessons/new`} className="bg-green-600 text-white px-4 py-2 rounded">
-            Add Lesson
-          </Link>
-          <Link to={`/courses/${id}/assignments/new`} className="bg-purple-600 text-white px-4 py-2 rounded">
-            Add Assignment
-          </Link>
+        {isTeacherOwner && (
+          <div className="flex gap-2 mb-8">
+            <Link to={`/courses/${id}/lessons/new`} className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+              + Add Lesson
+            </Link>
+            <Link to={`/courses/${id}/assignments/new`} className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+              + Add Assignment
+            </Link>
+          </div>
+        )}
+
+        <h2 className="text-lg font-semibold text-slate-800 mb-3">Lessons</h2>
+        <div className="grid gap-2 mb-8">
+          {lessons.map((l) => (
+            <Link key={l.id} to={`/courses/${id}/lessons/${l.id}`} className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition">
+              <h3 className="font-medium text-slate-900">{l.title}</h3>
+              <p className="text-sm text-slate-500 truncate">{l.content}</p>
+            </Link>
+          ))}
+          {lessons.length === 0 && <p className="text-slate-400 text-sm">No lessons available.</p>}
         </div>
-      )}
 
-      <h2 className="text-xl font-semibold mt-6 mb-2">Lessons</h2>
-      <div className="space-y-2">
-            {lessons.map((l) => (
-          <Link key={l.id} to={`/courses/${id}/lessons/${l.id}`} className="block border rounded p-3 hover:shadow-md">
-            <h3 className="font-medium">{l.title}</h3>
-            <p className="text-sm text-gray-600 truncate">{l.content}</p>
-          </Link>
-        ))}
-        {lessons.length === 0 && <p className="text-gray-500 text-sm">No lessons available.</p>}
-      </div>
-
-      <h2 className="text-xl font-semibold mt-6 mb-2">Assignments</h2>
-      <div className="space-y-2">
-        {assignments.map((a) => (
-          <Link key={a.id} to={`/assignments/${a.id}`} className="block border rounded p-3 hover:shadow-md">
-            <h3 className="font-medium">{a.title}</h3>
-            <p className="text-sm text-gray-600">Due: {new Date(a.due_date).toLocaleString()}</p>
-          </Link>
-        ))}
-        {assignments.length === 0 && <p className="text-gray-500 text-sm">No assignments available.</p>}
+        <h2 className="text-lg font-semibold text-slate-800 mb-3">Assignments</h2>
+        <div className="grid gap-2">
+          {assignments.map((a) => (
+            <Link key={a.id} to={`/assignments/${a.id}`} className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition">
+              <h3 className="font-medium text-slate-900">{a.title}</h3>
+              <p className="text-sm text-slate-500">Due: {new Date(a.due_date).toLocaleString()}</p>
+            </Link>
+          ))}
+          {assignments.length === 0 && <p className="text-slate-400 text-sm">No assignments available.</p>}
+        </div>
       </div>
     </div>
   )
