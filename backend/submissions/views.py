@@ -65,3 +65,12 @@ class GradeSubmissionView(generics.UpdateAPIView):
     serializer_class = GradeSerializer
     permission_classes = [permissions.IsAuthenticated, IsCourseTeacher]
     queryset = Submission.objects.all()
+
+
+
+class PendingGradingView(generics.ListAPIView):
+    serializer_class = SubmissionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Submission.objects.filter(assignment__course__teacher=self.request.user, grade__isnull=True)

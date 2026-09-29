@@ -16,3 +16,5 @@ export const updateLesson = (courseId, lessonId, data) => api.put(`/courses/${co
   headers: { 'Content-Type': 'multipart/form-data' },
 })
 export const updateAssignment = (id, data) => api.put(`/assignments/${id}/`, data)
+export const getMyCourses = () => api.get('/courses/mine/')
+export const getPendingGrading = () => api.get('/submissions/pending-grading/')
