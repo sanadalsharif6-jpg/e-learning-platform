@@ -31,8 +31,6 @@ export default function CourseDetail() {
     }
   }
 
-  if (!course) return <div className="p-8 text-slate-500">Loading...</div>
-
   const handleDeleteCourse = async () => {
     if (!window.confirm('Delete this course? This cannot be undone.')) return
     try {
@@ -42,6 +40,9 @@ export default function CourseDetail() {
       setMessage('Failed to delete course.')
     }
   }
+
+  if (!course) return <div className="p-8 text-slate-500">Loading...</div>
+
   const isTeacherOwner = me && me.role === 'TEACHER' && course.teacher === me.id
   const isStudent = me && me.role === 'STUDENT'
 
@@ -50,7 +51,7 @@ export default function CourseDetail() {
       <div className="max-w-3xl mx-auto px-6 py-8">
         <Link to="/courses" className="text-indigo-600 text-sm font-medium hover:underline">&larr; Back to courses</Link>
         <h1 className="text-2xl font-bold text-slate-900 mt-2">{course.title}</h1>
-        <p className="text-slate-600 mb-1">{course.description}</p>
+        <p className="text-slate-600 mb-1 break-words">{course.description}</p>
         <p className="text-sm text-slate-400 mb-5">Taught by {course.teacher_username}</p>
 
         {message && <p className="text-emerald-600 text-sm bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 mb-4">{message}</p>}
@@ -61,25 +62,26 @@ export default function CourseDetail() {
           </button>
         )}
 
-                {isTeacherOwner && (
-          <div className="flex gap-2 mb-8">
+        {isTeacherOwner && (
+          <div className="flex gap-2 mb-8 flex-wrap">
             <Link to={`/courses/${id}/lessons/new`} className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
               + Add Lesson
             </Link>
             <Link to={`/courses/${id}/assignments/new`} className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
               + Add Assignment
             </Link>
-            <button onClick={handleDeleteCourse} className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition ml-auto">
+            <button onClick={handleDeleteCourse} className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition sm:ml-auto">
               Delete Course
             </button>
           </div>
         )}
+
         <h2 className="text-lg font-semibold text-slate-800 mb-3">Lessons</h2>
         <div className="grid gap-2 mb-8">
           {lessons.map((l) => (
-            <Link key={l.id} to={`/courses/${id}/lessons/${l.id}`} className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition">
+            <Link key={l.id} to={`/courses/${id}/lessons/${l.id}`} className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md hover:border-indigo-200 transition overflow-hidden">
               <h3 className="font-medium text-slate-900">{l.title}</h3>
-              <p className="text-sm text-slate-500 truncate">{l.content}</p>
+              <p className="text-sm text-slate-500 break-words line-clamp-2">{l.content}</p>
             </Link>
           ))}
           {lessons.length === 0 && <p className="text-slate-400 text-sm">No lessons available.</p>}
